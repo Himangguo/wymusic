@@ -1,0 +1,120 @@
+@import "./normalize.css";
+div {
+  margin: 0;
+  padding: 0;
+}
+p {
+  /* 块元素使段落能独占一行，在段落左右两边不会出现多余元素 */
+  display: block;
+  /* block表示块级元素方向的开始位置和结束位置 */
+  /* 相当于margin-top或者margin-bottom */
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  /* inline表示行内元素方向的开始位置和结束位置 */
+  /* 相当于margin-left或者margin-right */
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  /* 文字靠左排布 */
+  text-align: left;
+}
+.input {
+  display: inline-block;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  cursor: text;
+  padding: 1px 5px;
+  caret-color: red;
+  height: 25px;
+  line-height: 25px;
+}
+/*修改提示文字的颜色*/
+
+input::-webkit-input-placeholder {
+  /* WebKit browsers */
+  font-family: inherit;
+  font-size: 13px;
+  color: #c7c7c7;
+}
+
+input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  font-family: inherit;
+  font-size: 13px;
+  color: #c7c7c7;
+}
+
+input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  font-family: inherit;
+  font-size: 13px;
+  color: #c7c7c7;
+}
+
+input:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  font-family: inherit;
+  font-size: 13px;
+  color: #c7c7c7;
+}
+.bBShadow {
+  box-shadow: 0 1px 1px rgba(100, 100, 100, 0.1);
+}
+.bTShadow {
+  box-shadow: 0 -1px 1px rgba(100, 100, 100, 0.1);
+}
+.button1 {
+  width: 80%;
+  border: 1px solid;
+  margin: 20px auto;
+  padding: 5px;
+  text-align: center;
+  border-radius: 20px;
+  background-color: #eb3c3c;
+  color: #fff;
+}
+@font-face {
+  font-family: "iconfont"; /* project id 1666491 */
+  src: url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.eot");
+  src: url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.eot?#iefix")
+      format("embedded-opentype"),
+    url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.woff2") format("woff2"),
+    url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.woff") format("woff"),
+    url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.ttf") format("truetype"),
+    url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.svg#iconfont") format("svg");
+}
+.iconfont-big {
+  font-family: "iconfont" !important;
+  font-size: 40px;
+  font-style: normal;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.iconfont-red {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  color: #eb3c3c;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.iconfont-white {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
