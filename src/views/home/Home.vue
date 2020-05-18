@@ -4,18 +4,19 @@
  * @Author: mangguo
  * @Date: 2020-03-02 14:38:18
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-09 20:14:12
+ * @LastEditTime: 2020-05-18 15:12:53
  -->
 <template>
   <div class="home" ref="home">
     <!-- 头部导航栏 -->
-    <detail-nav-bar @showSideBar="showSideBar" @changeBgImg="changeBgImg"></detail-nav-bar>
+    <detail-nav-bar @showSideBar="showSideBar"></detail-nav-bar>
     <!-- 侧边栏 -->
     <side-bar ref="sidebar"></side-bar>
 
-    <scroll class="cnt" :probe-type="3" @scroll="contenScroll">
+    <scroll class="cnt" ref="scroll" :probe-type="3" @scroll="contenScroll">
       <router-view></router-view>
     </scroll>
+    <backtop @click.native="backtop" v-show="flag_position"/>
     <!-- 底部播放媒体  -->
     <footeraudio ref="footerRudio"></footeraudio>
   </div>
@@ -24,6 +25,7 @@
 <script>
 import detailNavBar from "./childComps/DetailNavBar";
 import scroll from "@/components/common/scroll/Scroll";
+import backtop from "@/components/common/backtop/BackTop";
 import sideBar from "@/components/content/sidebar/SideBar";
 import footeraudio from "@/components/content/footerAudio/FooterAudio";
 
@@ -31,6 +33,7 @@ export default {
   name: "Home",
   data() {
     return {
+      flag_position: false,
       userInf: {}, // 用户信息
       playList: [] // 播放列表
     };
@@ -39,6 +42,7 @@ export default {
     detailNavBar,
     sideBar,
     scroll,
+    backtop,
     footeraudio
   },
   methods: {
@@ -46,35 +50,38 @@ export default {
       console.log("接收到子组件的发射事件");
       this.$refs.sidebar.showSideBar();
     },
-    changeBgImg(type) {
+    /*     changeBgImg(type) {
       if (type === 1) {
-        this.$refs.home.style.background = `url(${this.userInf.backgroundUrl})`;
+        this.$refs.home.style.backgroundImage = `url(${this.userInf.backgroundUrl})`;
       } else if (type === 0) {
         this.$refs.home.style.background = "";
       }
-    },
+    }, */
     contenScroll(position) {
-      /*  this.flag_position = position.y < -300;
-      this.ifTopFloat = position.y < -this.offsetTop; */
-     /*  console.log(position); */
+      this.flag_position = position.y < -300;
+    },
+    backtop() {
+      this.$refs.scroll.scrollTo(0, 0);
     }
   },
   created() {
-    // this.userInf = this.$store.state.userinf;
     this.userInf = JSON.parse(localStorage.userinf);
     console.log(this.userInf);
   },
   mounted() {
-    this.$refs.home.style.background = `url(${this.userInf.backgroundUrl})`;
+    /* this.$refs.home.style.backgroundImage = `url(${this.userInf.backgroundUrl})`; */
   }
 };
 </script>
 <style scoped>
 .home {
-  width: 100vw;
-  height: 100vh;
-  background-size: 100vw 100vh;
-  background-repeat: no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -10;
+  background: #000;
 }
 .cnt {
   position: absolute;

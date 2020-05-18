@@ -4,7 +4,7 @@
  * @Author: mangguo
  * @Date: 2020-03-02 14:38:18
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-09 22:29:18
+ * @LastEditTime: 2020-03-15 20:17:24
  */
 import Vue from "vue";
 import Router from "vue-router";
@@ -29,6 +29,7 @@ const CloudVillage = () =>
   import("views/home/children/cloudVillage/CloudVillage");
 const TVideo = () => import("views/home/children/tvideo/TVideo");
 const MyLike = () => import("views/mylike/MyLike");
+const Search = () => import("views/search/Search");
 Vue.use(Router);
 const routes = [
   {
@@ -75,6 +76,10 @@ const routes = [
       {
         path: "myLike",
         component: MyLike
+      },
+      {
+        path:"search",
+        component:Search
       }
     ]
   }

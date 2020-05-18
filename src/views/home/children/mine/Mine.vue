@@ -4,7 +4,7 @@
  * @Author: mangguo
  * @Date: 2020-03-02 21:54:22
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-09 21:47:37
+ * @LastEditTime: 2020-05-16 19:29:37
  -->
 <template>
   <div class="mine">
@@ -164,6 +164,7 @@ export default {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 10px;
+  padding-bottom: 40px;
 }
 .cartTitle {
   font-size: 13px;

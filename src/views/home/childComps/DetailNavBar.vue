@@ -4,7 +4,7 @@
  * @Author: mangguo
  * @Date: 2020-03-02 15:14:42
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-04 20:38:23
+ * @LastEditTime: 2020-05-18 10:44:38
  -->
 <template>
   <div class="detailNavBar">
@@ -15,7 +15,7 @@
         :style="`color:${activeColor}`"
         @click="showSideBar"
       >&#xe601;</div>
-      <div slot="center" class="title">
+      <div slot="center" class="centerTitle">
         <div
           :class="activeIndex === index?'title-item-active':'title-item'"
           :style="activeIndex === index?`color:${activeColor}`:`color:${color}`"
@@ -24,7 +24,7 @@
           @click="changeActive(index)"
         >{{item}}</div>
       </div>
-      <div slot="right" class="iconfont" :style="`color:${activeColor}`">&#xe662;</div>
+      <div slot="right" class="iconfont" :style="`color:${activeColor}`" @click="search">&#xe662;</div>
     </nav-bar>
   </div>
 </template>
@@ -51,31 +51,33 @@ export default {
   methods: {
     changeActive(index) {
       this.activeIndex = index;
-      if (this.activeIndex === 0) {
-        this.activeColor = "#fff";
-        this.$emit("changeBgImg", 1);
-      } else {
-        this.activeColor = "#000";
-        this.$emit("changeBgImg", 0);
-      }
       this.$router.replace(this.navPath[index]);
     },
     showSideBar() {
       this.$emit("showSideBar");
+    },
+    search() {
+      this.$router.push("search");
     }
   }
 };
 </script>
 <style scoped>
-.title {
+.detailNavBar {
+  position: relative;
+  z-index: 1;
+}
+.centerTitle {
   display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 .title-item,
 .title-item-active {
-  flex: 1;
   font-size: 14px;
 }
 .title-item-active {
   font-weight: bold;
+  color: #000;
 }
 </style>

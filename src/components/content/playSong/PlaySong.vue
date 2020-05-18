@@ -4,23 +4,17 @@
  * @Author: mangguo
  * @Date: 2020-03-06 13:40:54
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-10 11:52:13
+ * @LastEditTime: 2020-05-16 20:20:06
  -->
 <template>
   <div class="playsong" ref="playsong">
     <tapback :flag="false" @click.native="hideAlbum">
-      <div>{{currentMusic.name}}</div>
-      <div class="creator">{{currentMusic.creator}}></div>
+      <div class="songName ellipsis">{{currentMusic.name}}</div>
+      <div class="creator ellipsis">{{currentMusic.creator}}></div>
     </tapback>
     <!-- 歌词区 -->
     <div class="wordsOfSong" v-show="showWords" ref="wordsOfSong">
-      <scroll
-        class="cnt"
-        :probe-type="3"
-        @scroll="contenScroll"
-        ref="scroll"
-        @click.native="showWords=false"
-      >
+      <scroll class="cnt" :probe-type="3" ref="scroll" @click.native="showWords=false">
         <!-- 空白区 防止better-scroll自动回弹-->
         <div :style="`height:${screenHeight/2}px`"></div>
         <!-- 歌词item -->
@@ -35,9 +29,7 @@
         </div>
         <!-- 无歌词区 -->
 
-        <div class="nulllyric" v-show="wordsTime.length === 0">
-          纯音乐，请欣赏
-        </div>
+        <div class="nulllyric" v-show="wordsTime.length === 0">纯音乐，请欣赏</div>
 
         <!-- 空白区 -->
         <div :style="`height:${screenHeight/2}px`"></div>
@@ -84,29 +76,33 @@ export default {
     scroll
   },
   created() {
-    this.id = Number(localStorage.songId);
-    // 获取歌词
-    this.getWords();
-    this.index = Number(localStorage.songIndex);
-    console.log(this.index);
-    this.songList = JSON.parse(localStorage.songList);
-    // 将歌单所有歌的id用逗号隔开形成字符串
-    let trackchars = this.splitWithComma(this.songList.trackIds);
-    console.log(trackchars);
-    getSongUrl(trackchars).then(res => {
-      this.songUrlList = res.data;
-      this.mergeCurrentInf();
-    });
+    // 如果缓存中有歌曲列表
+    if (localStorage.songList) {
+      this.id = Number(localStorage.songId);
+      // 获取歌词
+      this.getWords();
+      this.index = Number(localStorage.songIndex);
+      console.log(this.index);
+      this.songList = JSON.parse(localStorage.songList);
+      // 将歌单所有歌的id用逗号隔开形成字符串
+      let trackchars = this.splitWithComma(this.songList.trackIds);
+      console.log(trackchars);
+      // 获取歌曲url
+      getSongUrl(trackchars).then(res => {
+        this.songUrlList = res.data;
+        this.mergeCurrentInf();
+      });
+    }
   },
   mounted() {
-    this.$refs.playsong.style.background = `url(${this.songList.creator.backgroundUrl})`;
+    this.$refs.playsong.style.background = "black";
   },
   data() {
     return {
       id: "",
       index: "",
       songList: {},
-      songUrlList: {},
+      songUrlList: [],
       currentMusic: {
         id: "",
         name: "",
@@ -115,7 +111,7 @@ export default {
         songUrl: ""
       },
       showWords: false, // 是否显示歌词
-      copyright:true, // 有无版权
+      copyright: true, // 有无版权
       wordsTime: [],
       screenHeight: 0,
       currentNy: "",
@@ -143,12 +139,16 @@ export default {
         if (item.id === this.id) {
           console.log("找到相等的啦");
           this.currentMusic.name = item.name;
-          this.currentMusic.creator = item.ar[0].name;
-          this.currentMusic.picUrl = item.al.picUrl;
+          if (item.ar) {
+            this.currentMusic.creator = item.ar[0].name;
+            this.currentMusic.picUrl = item.al.picUrl;
+          } else {
+            this.currentMusic.creator = item.artists[0].name;
+            this.currentMusic.picUrl = item.album.artist.img1v1Url;
+          }
+
           // 遍历songUrlList找到对应的url
           this.currentMusic.songUrl = this.songUrlList.filter(inneritem => {
-            if (inneritem.id === this.id) {
-            }
             return inneritem.id === this.id;
           })[0].url;
           // 将音乐存入本地缓存
@@ -162,16 +162,23 @@ export default {
       console.log(this.index);
       this.songList = JSON.parse(localStorage.songList);
       this.getWords();
-      this.mergeCurrentInf();
-      checkMusic(this.id).then(res => {
-        // 清除歌词记录
-        this.wordIndex = -1;
-        if (res && res.success) {
-          // 放入缓存
-          localStorage["songId"] = this.id;
-          localStorage["songIndex"] = "" + this.index;
-          return;
-        }
+      let trackchars = this.splitWithComma(this.songList.trackIds);
+      // 获取歌曲url
+      getSongUrl(trackchars).then(res => {
+        this.songUrlList = res.data;
+        this.mergeCurrentInf();
+        checkMusic(this.id).then(res => {
+          // 清除歌词记录
+          this.wordIndex = -1;
+          if (res && res.success) {
+            // 放入缓存
+            localStorage["songId"] = this.id;
+            localStorage["songIndex"] = "" + this.index;
+            this.active = true;
+            this.changeStatus(true);
+            return;
+          }
+        });
       });
     },
     playSong() {
@@ -192,26 +199,26 @@ export default {
       console.log(this.index);
       this.index--;
       this.id = this.songList.tracks[this.index].id;
-      this.getWords();
-      this.mergeCurrentInf();
-      checkMusic(this.id)
-        .then(res => {
-          // 清除歌词记录
-          // 放入缓存
-          localStorage["songId"] = this.id;
-          localStorage["songIndex"] = "" + this.index;
 
-          this.wordIndex = -1;
-          if (res && res.success) {
-            return;
-          } else {
-            this.copyright = false;
-            this.$toastMessage({ message: "亲爱的，暂无版权" });
-          }
-        })
-        .then(() => {
+      checkMusic(this.id).then(res => {
+        // 清除歌词记录
+        // 放入缓存
+        localStorage["songId"] = this.id;
+        localStorage["songIndex"] = "" + this.index;
+        this.wordIndex = -1;
+        if (res && res.success) {
+          this.copyright = true;
+          this.active = true;
+          this.getWords();
+          this.mergeCurrentInf();
           this.$bus.$emit("playSong");
-        });
+        } else {
+          this.copyright = false;
+          this.active = false;
+          this.$toastMessage({ message: "亲爱的，暂无版权，已帮您跳到上一首" });
+          this.frontPlay();
+        }
+      });
     },
     afterPlay() {
       if (this.index === this.songUrlList.length - 1) {
@@ -224,25 +231,25 @@ export default {
       this.id = this.songList.tracks[this.index].id;
       this.getWords();
       this.mergeCurrentInf();
-      checkMusic(this.id)
-        .then(res => {
-          // 清除歌词记录
-          this.wordIndex = -1;
-          // 放入缓存
-          localStorage["songId"] = this.id;
-          localStorage["songIndex"] = "" + this.index;
-          if (res && res.success) {
-            console.log("有版权");
-            return;
-          } else {
-            console.log("无版权");
-            this.copyright = false;
-            this.$toastMessage({ message: "亲爱的，暂无版权" });
-          }
-        })
-        .then(() => {
+      checkMusic(this.id).then(res => {
+        // 清除歌词记录
+        // 放入缓存
+        localStorage["songId"] = this.id;
+        localStorage["songIndex"] = "" + this.index;
+        this.wordIndex = -1;
+        if (res && res.success) {
+          this.copyright = true;
+          this.active = true;
+          this.getWords();
+          this.mergeCurrentInf();
           this.$bus.$emit("playSong");
-        });
+        } else {
+          this.copyright = false;
+          this.active = false;
+          this.$toastMessage({ message: "亲爱的，暂无版权，已帮您跳到下一首" });
+          this.afterPlay();
+        }
+      });
     },
     showWordsOfSong() {
       // 显示歌词
@@ -251,16 +258,61 @@ export default {
     // 处理歌词
     splitWords(lyric) {
       let lyrics = lyric.split("\n").map(item => {
-        return item.replace(/^\[/, "");
+        return item.replace(/\[/g, "");
       });
+
       this.wordsTime = lyrics.map(item => {
         return item.split("]");
       });
+      // 去除小数
       this.wordsTime.forEach(item => {
-        item[0] = item[0].split(".")[0];
+        for (let i = 0; i < item.length - 1; i++) {
+          item[i] = item[i].split(".")[0];
+        }
       });
-
+      this.dealRepeat(); // 处理复句
+      this.sortWords(); // 对歌词进行排序
+      console.log("------");
       console.log(this.wordsTime);
+      console.log("------");
+    },
+    // 拆分复句
+    dealRepeat() {
+      for (let i = 0; i < this.wordsTime.length; i++) {
+        let item = this.wordsTime[i];
+        let length = item.length;
+        if (length === 1) {
+          this.wordsTime.splice(i, 1); // 如果歌词格式出错就删除
+        } else if (length > 2) {
+          // 如果是复句，就进行拆分
+          while (item.length > 2) {
+            this.wordsTime.push([item[0], item[item.length - 1]]);
+            item.splice(0, 1);
+          }
+        }
+      }
+    },
+    // 对歌词进行排序
+    sortWords() {
+      this.wordsTime.sort(sortFun());
+      function sortFun() {
+        return function(a, b) {
+          // 比较时间
+          let time1 = [
+            parseInt(a[0].split(":")[0]),
+            parseInt(a[0].split(":")[1])
+          ];
+          let time2 = [
+            parseInt(b[0].split(":")[0]),
+            parseInt(b[0].split(":")[1])
+          ];
+          if (time1[0] === time2[0]) {
+            return time1[1] - time2[1];
+          } else {
+            return time1[0] - time2[0];
+          }
+        };
+      }
     },
     getWords() {
       // 获取歌词
@@ -283,11 +335,11 @@ export default {
         this.screenHeight = scrolly;
       });
     },
+    // 歌词滚动
     wordScrollUp(index) {
       this.wordIndex = index;
       this.$refs.scroll.scrollTo(0, this.currentNy - 31 * this.wordIndex);
-    },
-    contenScroll() {}
+    }
   }
 };
 </script>
@@ -302,6 +354,9 @@ export default {
   z-index: 2000;
   background-size: 100vw 100vh;
   background-repeat: no-repeat;
+}
+.songName {
+  max-width: 50vw;
 }
 .creator {
   color: #aaaaaa;
@@ -384,7 +439,7 @@ export default {
 }
 .nulllyric {
   text-align: center;
-  color:#aaaaaa;
+  color: #aaaaaa;
 }
 .words {
   color: #aaaaaa;

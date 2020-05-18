@@ -73,15 +73,22 @@ input:-ms-input-placeholder {
   background-color: #eb3c3c;
   color: #fff;
 }
+
+/* 文字不换行，超出范围用...代替 */
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 @font-face {
   font-family: "iconfont"; /* project id 1666491 */
-  src: url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.eot");
-  src: url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.eot?#iefix")
+  src: url("//at.alicdn.com/t/font_1666491_qimytvilfwa.eot");
+  src: url("//at.alicdn.com/t/font_1666491_qimytvilfwa.eot?#iefix")
       format("embedded-opentype"),
-    url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.woff2") format("woff2"),
-    url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.woff") format("woff"),
-    url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.ttf") format("truetype"),
-    url("//at.alicdn.com/t/font_1666491_ixsd9nsdzf7.svg#iconfont") format("svg");
+    url("//at.alicdn.com/t/font_1666491_qimytvilfwa.woff2") format("woff2"),
+    url("//at.alicdn.com/t/font_1666491_qimytvilfwa.woff") format("woff"),
+    url("//at.alicdn.com/t/font_1666491_qimytvilfwa.ttf") format("truetype"),
+    url("//at.alicdn.com/t/font_1666491_qimytvilfwa.svg#iconfont") format("svg");
 }
 .iconfont-big {
   font-family: "iconfont" !important;

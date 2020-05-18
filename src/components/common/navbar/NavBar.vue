@@ -4,7 +4,7 @@
  * @Author: mangguo
  * @Date: 2020-03-02 15:03:52
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-04 22:03:04
+ * @LastEditTime: 2020-03-15 22:17:36
  -->
 <template>
   <div class="nav-bar">
@@ -37,10 +37,14 @@ export default {
 .right {
   width: 60px;
   text-align: center;
+  height: 100%;
 }
 .center {
   flex: 1;
   text-align: center;
-  color: black;
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  
 }
 </style>

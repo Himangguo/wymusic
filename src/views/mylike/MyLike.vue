@@ -4,12 +4,11 @@
  * @Author: mangguo
  * @Date: 2020-03-05 20:03:21
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-10 12:06:31
+ * @LastEditTime: 2020-05-16 19:39:01
  -->
 <template>
   <div class="mylike" ref="mylike">
     <tapback>歌单</tapback>
-    <!--  <scroll class="cnt" :probe-type="3" @scroll="contenScroll"> -->
     <div class="header">
       <div class="coverImgUrl">
         <img :src="songList.coverImgUrl" alt />
@@ -32,53 +31,17 @@
         <div class="navtitle innerColor">{{item.title}}</div>
       </div>
     </div>
-    <div class="songList">
-      <div class="playAll">
-        <div class="playAllIcon">
-          <i class="iconfont">&#xe6af;</i>
-        </div>
-        <div>
-          播放全部
-          <span class="innerFont">(共{{playList.trackCount}}首)</span>
-        </div>
-      </div>
-      <div class="songListBox">
-        <div
-          class="songItem"
-          v-for="(item,index) in playList.tracks"
-          :key="item.id"
-          @click="playSong(item.id,index)"
-        >
-          <div class="orderId">{{index+1}}</div>
-          <div class="songbox">
-            <div class="songname">{{item.name}}</div>
-            <div class="songinf">
-              <i class="iconfont innerSQ">&#xe608;</i>
-              {{item.ar[0].name}} - {{item.al.name}}
-            </div>
-          </div>
-          <div class="rightTool">
-            <div class="vedio">
-              <i class="iconfont innerColor">&#xe605;</i>
-            </div>
-            <div class="fun">
-              <i class="iconfont innerColor">&#xe690;</i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--   </scroll> -->
+    <song-list :playlist="playList" />
   </div>
 </template>
 <script>
 import tapback from "@/components/common/topback/TopBack";
-// import scroll from "@/components/common/scroll/Scroll";
-import { getDetailsongList, checkMusic } from "@/network/mylike";
+import SongList from "@/components/common/songList/SongList";
+import { getDetailsongList } from "@/network/mylike";
 export default {
   components: {
-    tapback
-    // scroll
+    tapback,
+    SongList
   },
   data() {
     return {
@@ -120,28 +83,10 @@ export default {
     });
   },
   mounted() {
-    this.$refs.mylike.style.background = `url(${this.songList.creator.backgroundUrl})`;
+    // this.$refs.mylike.style.background = `url(${this.songList.creator.backgroundUrl})`;
+    this.$refs.mylike.style.background = "";
   },
-  methods: {
-    contenScroll(position) {},
-    playSong(id, index) {
-      console.log(index);
-      // 检查此音乐是否可用
-      checkMusic(id).then(res => {
-        console.log(res);
-        // 如果可用
-        if (res && res.success) {
-          // 将歌单列表放入缓存中
-          localStorage["songList"] = JSON.stringify(this.playList);
-          localStorage["songId"] = id;
-          localStorage["songIndex"] = "" + index;
-          this.$bus.$emit("playSong");
-        } else {
-          this.$toastMessage({ message: "亲爱的，暂无版权" });
-        }
-      });
-    }
-  }
+  methods: {}
 };
 </script>
 <style scoped>
@@ -205,76 +150,5 @@ export default {
   align-items: center;
   font-size: 10px;
   color: #dddddd;
-}
-.songList {
-  background-color: #fff;
-  width: calc(100vw - 20px);
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  padding: 10px;
-}
-.songList {
-  color: #000;
-}
-.playAll {
-  display: flex;
-  align-items: flex-start;
-  font-size: 15px;
-  margin-bottom: 10px;
-}
-.playAllIcon {
-  margin-right: 15px;
-}
-.innerFont {
-  font-size: 13px;
-  color: #aaaaaa;
-}
-.innerColor {
-  color: #aaaaaa;
-}
-.innerSQ {
-  color: #ff6600;
-  margin-right: 3px;
-}
-.songListBox {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-.songItem {
-  display: flex;
-  margin: 10px 0;
-  align-items: center;
-}
-.orderId {
-  width: 20px;
-  text-align: center;
-  color: #aaaaaa;
-  margin-right: 15px;
-}
-.songbox {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  max-width: 60%;
-}
-.songname {
-  font-size: 13px;
-  margin-bottom: 5px;
-}
-.songinf {
-  display: flex;
-  align-items: center;
-  color: #aaaaaa;
-  font-size: 10px;
-}
-.rightTool {
-  position: absolute;
-  right: 0;
-  display: flex;
-}
-.vedio {
-  margin-right: 20px;
 }
 </style>

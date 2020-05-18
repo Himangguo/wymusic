@@ -4,7 +4,7 @@
  * @Author: mangguo
  * @Date: 2020-03-02 19:09:54
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-05 19:27:24
+ * @LastEditTime: 2020-05-16 20:17:30
  -->
 <template>
   <div :class="isShow?'sidebar-active':'sidebar'" @click.self="hideSideBar">
@@ -74,7 +74,9 @@ export default {
     logout() {
       logout().then(res => {
         console.log(res);
-        // 跳转到登录界面
+        // 清除缓存
+        localStorage.clear();
+        // 切换到到登录界面
         this.$router.replace("/index");
       });
     }

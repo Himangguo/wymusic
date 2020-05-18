@@ -4,9 +4,10 @@
  * @Author: mangguo
  * @Date: 2020-03-03 20:18:24
  * @LastEditors: mangguo
- * @LastEditTime: 2020-03-10 12:47:31
+ * @LastEditTime: 2020-05-18 09:24:16
  */
 import axios from "axios";
+import vue from "vue";
 /**
  * @describe: 创建axios实例
  * @param {object} config 配置信息
@@ -16,27 +17,30 @@ export function request(config) {
   // 创建axios实例
   const instance = axios.create({
     baseURL: "http://192.168.0.105:3000",
-
-    // baseURL: "http://localhost:3000",
-    timeout: 5000
+    timeout: 5000,
   });
   // 请求拦截
   instance.interceptors.request.use(
-    config => {
+    (config) => {
       // 网络请求加载动画
+      vue.prototype.$loadingBox("加载中");
       // token  uid
       return config;
     },
-    err => {
+    (err) => {
       console.log(err);
     }
   );
   // 响应拦截
   instance.interceptors.response.use(
-    config => {
+    (config) => {
+      // 关闭加载动画
+      vue.prototype.$loadingBox.close();
       return config.data;
     },
-    err => {
+    (err) => {
+      // 关闭加载动画
+      vue.prototype.$loadingBox.close();
       console.log(err);
     }
   );
