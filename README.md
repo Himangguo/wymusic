@@ -1,6 +1,6 @@
 # wymusic
 
-本项目是基于NeteaseCloudMusic开发的，所以启动项目需要先下载并启动NeteaseCloudMusic的服务
+>本项目是基于NeteaseCloudMusic开发的，所以启动项目需要先下载并启动NeteaseCloudMusic的服务
 
 ## NeteaseCloudMusic
 
@@ -10,12 +10,17 @@
 
 ## 项目依赖包下载
 
-```npm install```
+```
+npm install
+```
 
-## 项目启动
+##项目启动
 
-```npm run serve```
+```
+npm run serve
+```
 
-## 环境
+##环境
 
 不支持IE浏览器，最好是Chrome浏览器，并打开手机调试模式。
+
